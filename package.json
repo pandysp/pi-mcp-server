@@ -1,0 +1,29 @@
+{
+  "name": "pi-mcp-server",
+  "version": "0.1.0",
+  "description": "MCP server wrapping the Pi coding agent as tools",
+  "type": "module",
+  "bin": {
+    "pi-mcp-server": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@mariozechner/pi-coding-agent": "^0.52.9",
+    "@mariozechner/pi-ai": "^0.52.9",
+    "@modelcontextprotocol/sdk": "^1.25.3"
+  },
+  "optionalDependencies": {
+    "@anthropic-ai/sandbox-runtime": "^0.0.37"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "@types/node": "^22.0.0",
+    "vitest": "^3.2.0"
+  }
+}
