@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.1.2] - 2026-02-11
+
+### Added
+- Version consistency check in CI (tag vs package.json)
+- Release script (`scripts/publish-release.sh`) for repeatable releases
+- IDE agent files (AGENT.md + CLAUDE.md/CURSOR.md symlinks)
+- Start scripts (start.sh, start.bat) included in npm package
+
+### Changed
+- Merged publish workflow into ci.yml with tag-based trigger
+
 ## [0.1.1] - 2026-02-11
 
 ### Fixed
