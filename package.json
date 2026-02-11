@@ -15,7 +15,9 @@
     "pi-mcp-server": "./dist/index.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "start.sh",
+    "start.bat"
   ],
   "scripts": {
     "build": "tsc",
