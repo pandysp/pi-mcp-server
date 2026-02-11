@@ -61,7 +61,10 @@ function buildTools(
     }
 
     const entry = TOOL_MAP[name];
-    if (!entry) continue;
+    if (!entry) {
+      console.error(`buildTools: tool "${name}" is valid but has no TOOL_MAP entry — skipping`);
+      continue;
+    }
 
     result.push(needsCustomCwd ? entry.create(cwd) : entry.default);
   }
@@ -90,9 +93,17 @@ function disposeSession(
   session: { abort(): Promise<void>; dispose(): void },
   unsubscribe: () => void,
 ): void {
-  try { unsubscribe(); } catch { /* best effort */ }
-  try { session.abort(); } catch { /* best effort */ }
-  try { session.dispose(); } catch { /* best effort */ }
+  try { unsubscribe(); } catch (err) {
+    console.error("disposeSession: unsubscribe failed:", err);
+  }
+  try {
+    session.abort().catch((err) => console.error("disposeSession: abort failed:", err));
+  } catch (err) {
+    console.error("disposeSession: abort threw synchronously:", err);
+  }
+  try { session.dispose(); } catch (err) {
+    console.error("disposeSession: dispose failed:", err);
+  }
 }
 
 export function registerPiTool(
@@ -129,6 +140,21 @@ export function registerPiTool(
         const modelId = args.model ?? config.model;
         const thinkingLevel = args.thinkingLevel ?? config.thinkingLevel;
         const cwd = args.cwd ?? config.cwd;
+
+        if (args.cwd) {
+          const { existsSync, statSync } = await import("node:fs");
+          if (!existsSync(args.cwd) || !statSync(args.cwd).isDirectory()) {
+            return {
+              isError: true,
+              content: [
+                {
+                  type: "text" as const,
+                  text: `Invalid cwd: "${args.cwd}" does not exist or is not a directory.`,
+                },
+              ],
+            };
+          }
+        }
 
         const result = resolveModel(provider, modelId);
         if (result.error) {
@@ -171,7 +197,11 @@ export function registerPiTool(
             lastAccessed: Date.now(),
             mutex: Promise.resolve(),
           });
-        } catch {
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : String(err);
+          if (!msg.includes("Maximum sessions")) {
+            throw err;
+          }
           // Capacity reached — dispose session but don't lose the response
           disposeSession(session, unsubscribe);
           if (responseText) {

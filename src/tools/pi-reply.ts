@@ -48,7 +48,23 @@ export function registerPiReplyTool(
       await previousMutex;
 
       try {
+        // Re-check: session may have been evicted while we waited for mutex
+        if (!store.has(args.threadId)) {
+          return {
+            isError: true,
+            content: [
+              {
+                type: "text" as const,
+                text: `Session not found: ${args.threadId}. It was evicted while waiting. Start a new session with the "pi" tool.`,
+              },
+            ],
+          };
+        }
+
         await entry.session.prompt(args.prompt);
+
+        // Refresh timestamp so active sessions don't appear idle to the expiry sweep
+        entry.lastAccessed = Date.now();
 
         const responseText = entry.session.getLastAssistantText();
 

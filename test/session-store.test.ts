@@ -4,7 +4,7 @@ import type { AgentSession } from "@mariozechner/pi-coding-agent";
 
 function mockEntry(overrides?: Partial<{ isStreaming: boolean }>) {
   const unsubscribe = vi.fn();
-  const abort = vi.fn();
+  const abort = vi.fn().mockResolvedValue(undefined);
   const dispose = vi.fn();
   const session = {
     isStreaming: overrides?.isStreaming ?? false,

@@ -102,9 +102,11 @@ export class SessionStore {
     }
 
     try {
-      entry.session.abort();
+      entry.session.abort().catch((err) =>
+        console.error(`Session ${threadId}: abort failed:`, err),
+      );
     } catch (err) {
-      console.error(`Session ${threadId}: abort failed:`, err);
+      console.error(`Session ${threadId}: abort threw synchronously:`, err);
     }
 
     try {
@@ -118,7 +120,11 @@ export class SessionStore {
     const now = Date.now();
     for (const [id, entry] of this._sessions) {
       if (now - entry.lastAccessed > this._idleTimeoutMs) {
-        this._disposeEntry(id);
+        try {
+          this._disposeEntry(id);
+        } catch (err) {
+          console.error(`Session ${id}: expiry disposal failed:`, err);
+        }
       }
     }
   }

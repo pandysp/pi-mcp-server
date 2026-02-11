@@ -165,12 +165,16 @@ function createSandboxedBashOps(
           if (killHandle) clearTimeout(killHandle);
 
           if (stderr) {
-            const annotated = SandboxManager.annotateStderrWithSandboxFailures(
-              command,
-              stderr,
-            );
-            if (annotated !== stderr) {
-              options.onData(Buffer.from(annotated));
+            try {
+              const annotated = SandboxManager.annotateStderrWithSandboxFailures(
+                command,
+                stderr,
+              );
+              if (annotated !== stderr) {
+                options.onData(Buffer.from(annotated));
+              }
+            } catch (err) {
+              console.error("Sandbox stderr annotation failed:", err);
             }
           }
 

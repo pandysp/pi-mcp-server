@@ -3,15 +3,51 @@
   "version": "0.1.0",
   "description": "MCP server wrapping the Pi coding agent as tools",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "bin": {
     "pi-mcp-server": "./dist/index.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
+    "clean": "rm -rf dist",
     "dev": "tsc --watch",
     "start": "node dist/index.js",
+    "prepublishOnly": "npm run clean && npm run build",
     "test": "vitest run",
     "test:watch": "vitest"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "author": "Andreas Spannagel",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pandysp/pi-mcp-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pandysp/pi-mcp-server/issues"
+  },
+  "homepage": "https://github.com/pandysp/pi-mcp-server#readme",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "pi",
+    "coding-agent",
+    "ai"
+  ],
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "@mariozechner/pi-coding-agent": "^0.52.9",

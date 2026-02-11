@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "pi": {
+      "command": "npx",
+      "args": ["-y", "pi-mcp-server"],
+      "env": {
+        "ANTHROPIC_API_KEY": "sk-ant-..."
+      }
+    }
+  }
+}

@@ -5,6 +5,7 @@
  */
 
 async function main() {
+  const { createRequire } = await import("node:module");
   const { McpServer } = await import("@modelcontextprotocol/sdk/server/mcp.js");
   const { StdioServerTransport } = await import(
     "@modelcontextprotocol/sdk/server/stdio.js"
@@ -15,6 +16,9 @@ async function main() {
   const { registerPiTool } = await import("./tools/pi.js");
   const { registerPiReplyTool } = await import("./tools/pi-reply.js");
 
+  const require = createRequire(import.meta.url);
+  const { version } = require("../package.json");
+
   const config = loadConfig();
 
   // Initialize sandbox (exits process on failure if sandbox=true)
@@ -23,7 +27,7 @@ async function main() {
   const store = new SessionStore(config.maxSessions, config.sessionIdleTimeout);
 
   const server = new McpServer(
-    { name: "pi-mcp", version: "0.1.0" },
+    { name: "pi-mcp", version },
     { capabilities: { logging: {} } },
   );
 

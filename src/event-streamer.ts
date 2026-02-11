@@ -17,10 +17,12 @@ function safeSendLog(
   try {
     server.server.sendLoggingMessage({ level, data });
   } catch (err) {
-    // Transport/connection errors (client disconnected) are expected — swallow.
-    // Programming errors (serialization, SDK bugs) should be logged.
+    // Programming errors (serialization, SDK bugs) should be logged prominently.
     if (err instanceof TypeError || err instanceof RangeError) {
       console.error("Event streamer serialization error:", err);
+    } else {
+      // Transport/connection errors (client disconnected) — log at debug level
+      console.error("Event streamer send failed (transport/disconnect):", err);
     }
   }
 }
