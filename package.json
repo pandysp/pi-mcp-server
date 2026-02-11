@@ -27,7 +27,7 @@
     "test:watch": "vitest"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "license": "MIT",
   "author": "Andreas Spannagel",
