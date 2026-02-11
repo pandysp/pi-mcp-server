@@ -40,7 +40,7 @@ export async function initSandbox(
     sandboxModule = (await import(
       // @ts-ignore — optional dependency, types may not be installed
       "@anthropic-ai/sandbox-runtime"
-    )) as SandboxManagerModule;
+    )) as unknown as SandboxManagerModule;
   } catch (err) {
     console.error(
       "PI_MCP_SANDBOX=true but @anthropic-ai/sandbox-runtime could not be loaded:",
